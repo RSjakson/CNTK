@@ -5,6 +5,7 @@
 
 #define _CRT_SECURE_NO_WARNINGS // "secure" CRT not available on all platforms  --add this at the top of all CPP files that give "function or variable may be unsafe" warnings
 
+#include "Actions.h" // TODO: Remove this. This is only for DoSaveTempmodelLocal
 #include "Basics.h"
 #include "ComputationNode.h"
 #include "ComputationNetwork.h"
@@ -98,6 +99,16 @@ void ComputationNetwork::Save(const wstring& fileName, const FileOptions fileFor
     // Saving into temporary file and then renaming it to the requested fileName
     // This is a standard trick to avoid havign corrupted model files if process dies during writing
     wstring tmpFileName = fileName + L".tmp";
+    // TODO: Remove this option.
+    // Saving temporary file locally, as HDFS FUSE is slow on philly.
+    if (DoSaveTempmodelLocal)
+    {
+#ifdef _WIN32
+        tmpFileName = L"/tmp/" + tmpFileName;
+#else
+        tmpFileName = L"C:\\WINDOWS\\Temp" + tmpFileName;
+#endif
+    }
     SaveToFileImpl(tmpFileName, fileFormat);
     renameOrDie(tmpFileName, fileName);
 }

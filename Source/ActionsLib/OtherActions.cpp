@@ -559,3 +559,10 @@ void DoTopologyPlot(const ConfigParameters& config)
 
 template void DoTopologyPlot<float>(const ConfigParameters& config);
 template void DoTopologyPlot<double>(const ConfigParameters& config);
+
+template <typename ElemType>
+bool DoSaveTempmodelLocal(const configParameters& config)
+{
+    bool saveTmpLocal = config(L"saveTmpLocal", true);
+    return saveTmpLocal;
+}
